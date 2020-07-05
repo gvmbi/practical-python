@@ -14,16 +14,17 @@ def portfolio_cost(filename: str) -> float:
         # headers: str = next(f).strip().split(',')
         headers = next(rows)
         # print(headers)
-        for row in rows:
+        for rowno, row in enumerate(rows, start = 1):
             # print(l, end = '')
             # row: list = l.strip().split(',')
             # print(row)
+            record = dict(zip(headers, row))
             try:
-                nshares = int(row[1])
-                price = float(row[2])
+                nshares = int(record['shares'])
+                price = float(record['price'])
                 pcost += nshares  * price
             except ValueError:
-                print('Row contains bad data -> skipped: ', row())
+                print(f'Row number: {rowno} Bad data: {row}')
     return pcost
 
 if len(sys.argv) == 2:
