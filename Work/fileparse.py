@@ -35,6 +35,7 @@ def parse_csv(filename: str, select: list = None, types: list = None, has_header
                 record = tuple(row)
             records.append(record)
     return records
-            
-l = parse_csv("Data/missing.csv", types = [str, int, float], silence_errors=True)
-print(l)
+
+if __name__ == '__main__':
+    l = parse_csv("Data/missing.csv", types = [str, int, float], silence_errors=True)
+    print(l)

@@ -3,9 +3,11 @@
 # Exercise 2.4
 
 import csv
+import sys
 from pprint import pprint
+from fileparse import parse_csv
 
-def read_portfolio(filename: str, *, show_error = 1) -> list:
+def read_portfolio_v1(filename: str, *, show_error = 1) -> list:
     '''
     Read portfolio csv file into a list of dictionaries (name, shares, price)
     '''
@@ -33,7 +35,11 @@ def read_portfolio(filename: str, *, show_error = 1) -> list:
             portfolio.append(holding)
     return portfolio
 
-def read_prices(filename: str, *, show_error = 1) -> dict:
+def read_portfolio(filename: str, silence_errors = False) -> list:
+    portfolio = parse_csv(filename, select = ['name', 'shares', 'price'], types = [str, int, float], silence_errors = silence_errors)
+    return portfolio
+
+def read_prices_v1(filename: str, *, show_error = 1) -> dict:
     '''
     Read a price file to a dictionary where keys are company names.
     '''
@@ -50,6 +56,10 @@ def read_prices(filename: str, *, show_error = 1) -> dict:
                 continue
             prices[name] = price
     return prices
+
+def read_prices(filename: str, silence_errors = False) -> dict:
+    prices = parse_csv(filename, types = [str, float], has_headers=False, silence_errors=silence_errors)
+    return dict(prices)
 
 def make_report(portfolio: list, prices: dict) -> list:
     '''
@@ -72,14 +82,22 @@ def print_report(report: list) -> None:
     return
 
 def portfolio_report(portfolio_filename: str, prices_filename: str) -> None:
-    portfolio = read_portfolio(portfolio_filename, show_error = 0)
-    prices = read_prices(prices_filename, show_error=0)
+    portfolio = read_portfolio(portfolio_filename)
+    prices = read_prices(prices_filename)
     report = make_report(portfolio, prices)
     print_report(report)
     return
 
+def main(argv: list):
+    if len(argv) != 3:
+        raise SystemExit(f'Bad parameters, usage: {argv[0]} portfolio_file price_file')
+    portfolio_report(argv[1], argv[2])
+
 if __name__ == '__main__':
-    portfolio_report('Data/portfolio.csv', 'Data/prices.csv')
+    main(sys.argv)
+    # portfolio_report('Data/portfolio.csv', 'Data/prices.csv')
+    # l = read_portfolio('Data/portfolio.csv')
+    # print(l)
 
 
 

@@ -1,13 +1,15 @@
+#!/usr/bin/env python
 # pcost.py
-#
+
 # Exercise 1.27
 
 import csv
 import sys
+import report
 
 # filename = 'Data/portfolio.csv'
 
-def portfolio_cost(filename: str) -> float:
+def portfolio_cost_v1(filename: str) -> float:
     pcost: float = 0.0
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
@@ -27,10 +29,16 @@ def portfolio_cost(filename: str) -> float:
                 print(f'Row number: {rowno} Bad data: {row}')
     return pcost
 
-if len(sys.argv) == 2:
-    filename = sys.argv[1]
-else:
-    filename = 'Data/portfolio.csv'
+def portfolio_cost(filename: str) -> float:
+    portfolio = report.read_portfolio(filename)
+    pcost = sum([row['shares'] * row['price'] for row in portfolio])
+    print(f'Total cost: {pcost}')
+    return pcost
 
-pcost = portfolio_cost(filename)
-print(f'Potfolio cost: {pcost}')
+def main(argv):
+    if len(argv) != 2:
+        raise SystemExit(f'Bad parameters, usage: {argv[0]} portfolio_file')
+    portfolio_cost(argv[1])
+
+if __name__ == '__main__':
+    main(sys.argv)
