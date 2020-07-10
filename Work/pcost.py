@@ -29,11 +29,11 @@ def portfolio_cost_v1(filename: str) -> float:
                 print(f'Row number: {rowno} Bad data: {row}')
     return pcost
 
-def portfolio_cost(filename: str) -> float:
+def portfolio_cost(filename: str) -> None:
     portfolio = report.read_portfolio(filename)
     pcost = sum([row['shares'] * row['price'] for row in portfolio])
     print(f'Total cost: {pcost}')
-    return pcost
+    # return pcost
 
 def main(argv):
     if len(argv) != 2:
